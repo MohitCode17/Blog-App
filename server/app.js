@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middlewares/error.js";
 
 const app = express();
@@ -6,6 +7,7 @@ const app = express();
 // MIDDLEWARE
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // TEST API ENDPOINT
 app.get("/test", (req, res) => {
