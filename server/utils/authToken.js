@@ -5,7 +5,7 @@ export const generateAuthToken = (user, message, statusCode, res) => {
 
   res
     .status(statusCode)
-    .cookie("authToken", token, {
+    .cookie("access_token", token, {
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Exactly 7 days from now
       httpOnly: true,
     })
