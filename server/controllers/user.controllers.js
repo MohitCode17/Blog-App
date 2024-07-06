@@ -7,6 +7,8 @@ import { generateAuthToken } from "../utils/authToken.js";
 export const handleRegister = catchAsyncErrors(async (req, res, next) => {
   const { username, email, password } = req.body;
 
+  // VALIDATION
+
   if (
     !username ||
     !email ||
@@ -16,6 +18,9 @@ export const handleRegister = catchAsyncErrors(async (req, res, next) => {
     password === ""
   )
     return next(new ErrorHandler("All fields are required", 400));
+
+  const userExists = await User.findOne({ username });
+  if (userExists) return next(new ErrorHandler("Username already taken"));
 
   await User.create({
     username,

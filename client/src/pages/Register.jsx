@@ -1,7 +1,58 @@
 import { FaArrowRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import {
+  signUpStart,
+  signUpSuccess,
+  signUpFailure,
+} from "../store/user/userSlice";
+import { Spinner } from "flowbite-react";
+import { toast } from "react-toastify";
 
 const Register = () => {
+  const { loading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigateTo = useNavigate();
+
+  // INITIAL FORM DATA
+  const [formData, setFormData] = useState({});
+
+  // HANDLING FORM INPUT CHANGE
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+  };
+
+  // SUBMIT DATA & CALLING REGISTER API
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      dispatch(signUpStart());
+
+      const res = await fetch("http://localhost:8000/api/v1/user/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        dispatch(signUpFailure(data.message));
+        toast.error(data.message);
+        return;
+      }
+
+      dispatch(signUpSuccess(data.message));
+      toast.success(data.message);
+      navigateTo("/login");
+    } catch (error) {
+      dispatch(signUpFailure(error.message));
+      toast.error(error.message);
+    }
+  };
+
   return (
     <section>
       <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -20,7 +71,7 @@ const Register = () => {
                 Sign In
               </Link>
             </p>
-            <form action="#" method="POST" className="mt-8">
+            <form onSubmit={handleSubmit} className="mt-8">
               <div className="space-y-5">
                 <div>
                   <label
@@ -28,14 +79,16 @@ const Register = () => {
                     className="text-base font-medium text-gray-900"
                   >
                     {" "}
-                    Full Name{" "}
+                    Username{" "}
                   </label>
                   <div className="mt-2">
                     <input
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="text"
                       placeholder="Full Name"
-                      id="name"
+                      id="username"
+                      required
+                      onChange={handleInputChange}
                     ></input>
                   </div>
                 </div>
@@ -53,6 +106,8 @@ const Register = () => {
                       type="email"
                       placeholder="Email"
                       id="email"
+                      required
+                      onChange={handleInputChange}
                     ></input>
                   </div>
                 </div>
@@ -72,15 +127,27 @@ const Register = () => {
                       type="password"
                       placeholder="Password"
                       id="password"
+                      required
+                      onChange={handleInputChange}
                     ></input>
                   </div>
                 </div>
                 <div>
                   <button
-                    type="button"
+                    type="submit"
                     className="inline-flex w-full items-center justify-center rounded-md bg-[#4a6fe4] px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-[#4a6fe4]/80"
                   >
-                    Create Account <FaArrowRight className="ml-2" size={16} />
+                    {loading ? (
+                      <>
+                        <Spinner size="sm" />
+                        <span className="pl-3">Loading...</span>
+                      </>
+                    ) : (
+                      <>
+                        Create Account
+                        <FaArrowRight className="ml-2" />
+                      </>
+                    )}
                   </button>
                 </div>
               </div>

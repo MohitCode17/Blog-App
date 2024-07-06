@@ -1,8 +1,20 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middlewares/error.js";
+import cors from "cors";
+import { config } from "dotenv";
+config();
 
 const app = express();
+
+// CORS CONFIG
+app.use(
+  cors({
+    origin: [process.env.FRONTEND_URL],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 // MIDDLEWARE
 app.use(express.json());
