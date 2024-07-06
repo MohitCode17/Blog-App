@@ -1,7 +1,56 @@
+import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../store/user/userSlice";
+import { toast } from "react-toastify";
+import { Spinner } from "flowbite-react";
 
 const Login = () => {
+  const [formData, setFormData] = useState({});
+  const { loading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigateTo = useNavigate();
+
+  // HANDLE INPUT CHANGE
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  // HANDLE FORM SUBMIT & CALLING LOGIN API
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      dispatch(signInStart());
+
+      const res = await fetch("http://localhost:8000/api/v1/user/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        dispatch(signInFailure(data.message));
+        toast.error(data.message);
+        return;
+      }
+
+      dispatch(signInSuccess(data.user));
+      toast.success(data.message);
+      navigateTo("/");
+    } catch (error) {
+      dispatch(signInFailure(error.message));
+    }
+  };
+
   return (
     <section>
       <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -20,15 +69,14 @@ const Login = () => {
                 Sign Up
               </Link>
             </p>
-            <form action="#" method="POST" className="mt-8">
+            <form onSubmit={handleSubmit} className="mt-8">
               <div className="space-y-5">
                 <div>
                   <label
                     htmlFor="email"
                     className="text-base font-medium text-gray-900"
                   >
-                    {" "}
-                    Email address{" "}
+                    Email address
                   </label>
                   <div className="mt-2">
                     <input
@@ -36,6 +84,7 @@ const Login = () => {
                       type="email"
                       placeholder="Email"
                       id="email"
+                      onChange={handleInputChange}
                     ></input>
                   </div>
                 </div>
@@ -45,8 +94,7 @@ const Login = () => {
                       htmlFor="password"
                       className="text-base font-medium text-gray-900"
                     >
-                      {" "}
-                      Password{" "}
+                      Password
                     </label>
                   </div>
                   <div className="mt-2">
@@ -55,15 +103,26 @@ const Login = () => {
                       type="password"
                       placeholder="Password"
                       id="password"
+                      onChange={handleInputChange}
                     ></input>
                   </div>
                 </div>
                 <div>
                   <button
-                    type="button"
+                    type="submit"
                     className="inline-flex w-full items-center justify-center rounded-md bg-[#4a6fe4] px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-[#4a6fe4]/80"
                   >
-                    Log In <FaArrowRight className="ml-2" size={16} />
+                    {loading ? (
+                      <>
+                        <Spinner size="sm" />
+                        <span className="pl-3">Loading...</span>
+                      </>
+                    ) : (
+                      <>
+                        Log In
+                        <FaArrowRight className="ml-2" />
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
