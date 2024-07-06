@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  handleGoogleAuth,
   handleLogin,
   handleRegister,
 } from "../controllers/user.controllers.js";
@@ -15,5 +16,10 @@ router.post("/register", handleRegister);
 // PATH: /api/v1/user/login
 // METHOD: POST
 router.post("/login", handleLogin);
+
+// ROUTE: GOOGLE OAUTH
+// PATH: /api/v1/user/googleAuth
+// METHOD: POST
+router.post("/googleAuth", handleGoogleAuth);
 
 export default router;

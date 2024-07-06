@@ -2,6 +2,7 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/error.js";
 import User from "../models/user.model.js";
 import { generateAuthToken } from "../utils/authToken.js";
+import bcrypt from "bcryptjs";
 
 // REGISTER CONTROLLER
 export const handleRegister = catchAsyncErrors(async (req, res, next) => {
@@ -53,4 +54,35 @@ export const handleLogin = catchAsyncErrors(async (req, res, next) => {
 
   // GENERATE JWT AUTH TOKEN
   generateAuthToken(validateUser, "Login success", 200, res);
+});
+
+export const handleGoogleAuth = catchAsyncErrors(async (req, res, next) => {
+  const { email, name, googlePhotoUrl } = req.body;
+
+  // FIND USER WITH EMAIL
+  const user = await User.findOne({ email });
+
+  if (user) {
+    // IF USER EXISTS THEN GENERATE AUTH TOKEN
+    generateAuthToken(user, "Login success", 200, res);
+  } else {
+    // IF USER DOESN'T EXISTS THEN CREATE NEW USER
+    const generatePassword =
+      Math.random().toString(36).slice(-8) +
+      Math.random().toString(36).slice(-8);
+
+    const hashedPassword = await bcrypt.hash(generatePassword, 10);
+
+    const newUser = new User({
+      username:
+        name.toLowerCase().split(" ").join("") +
+        Math.random().toString(9).slice(-4),
+      email,
+      password: hashedPassword,
+      profilePicture: googlePhotoUrl,
+    });
+
+    await newUser.save();
+    generateAuthToken(newUser, "Signup successfull", 201, res);
+  }
 });

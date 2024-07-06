@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema(
       minLength: [8, "Password must contains at least 8 or more characters !!"],
       select: false,
     },
+    profilePicture: {
+      type: String,
+      default:
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+    },
   },
   { timestamps: true }
 );
