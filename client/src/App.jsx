@@ -10,6 +10,7 @@ import Header from "./components/Header";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ToggleThemeButton from "./components/ToggleThemeButton";
 
 const App = () => {
   return (
@@ -23,6 +24,9 @@ const App = () => {
         <Route path="/projects" element={<Projects />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
+      <div className="fixed bottom-5 right-5">
+        <ToggleThemeButton />
+      </div>
       <ToastContainer theme="dark" position="bottom-right" />
     </Router>
   );
