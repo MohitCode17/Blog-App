@@ -1,9 +1,11 @@
-import { Button, Navbar, TextInput } from "flowbite-react";
+import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const { pathname } = useLocation();
+  const { currentUser } = useSelector((state) => state.user);
 
   return (
     <Navbar className="border-b">
@@ -28,9 +30,31 @@ const Header = () => {
       </form>
 
       <div className="flex gap-2 md:order-2">
-        <Link to={"/login"}>
-          <Button gradientDuoTone={"purpleToBlue"}>Login</Button>
-        </Link>
+        {currentUser ? (
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={
+              <Avatar alt="user" img={currentUser.profilePicture} rounded />
+            }
+          >
+            <Dropdown.Header>
+              <span className="block text-sm">@{currentUser.username}</span>
+              <span className="block text-sm font-medium truncate">
+                {currentUser.email}
+              </span>
+            </Dropdown.Header>
+            <Link to={"/dashboard?tab=profile"}>
+              <Dropdown.Item>Profile</Dropdown.Item>
+            </Link>
+            <Dropdown.Divider />
+            <Dropdown.Item>Sign out</Dropdown.Item>
+          </Dropdown>
+        ) : (
+          <Link to={"/login"}>
+            <Button gradientDuoTone={"purpleToBlue"}>Login</Button>
+          </Link>
+        )}
         <Navbar.Toggle />
       </div>
 
