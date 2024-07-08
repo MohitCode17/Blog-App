@@ -10,7 +10,7 @@ const DashboardProfile = () => {
       <form className="flex flex-col gap-4">
         <div className="w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full">
           <img
-            src={currentUser.profilePicture}
+            src={currentUser.profilePicture.url}
             alt="user"
             className="rounded-full w-full h-full object-cover border-8 dark:border-gray-100 border-gray-500"
           />
