@@ -11,6 +11,7 @@ import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ToggleThemeButton from "./components/ToggleThemeButton";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
@@ -22,7 +23,9 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/projects" element={<Projects />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
       </Routes>
       <div className="fixed bottom-5 right-5">
         <ToggleThemeButton />

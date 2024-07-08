@@ -57,15 +57,15 @@ const Login = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2">
         <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
           <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
-            <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl">
+            <h2 className="text-3xl font-bold leading-tight text-black dark:text-white/80 sm:text-4xl">
               Log In and Continue to FinTech!
             </h2>
-            <p className="mt-2 text-base text-gray-600">
+            <p className="mt-2 text-base text-gray-600 dark:text-gray-400">
               Don't have an account?{" "}
               <Link
                 to={"/register"}
                 title=""
-                className="font-medium text-black transition-all duration-200 hover:underline"
+                className="font-medium text-black dark:text-white transition-all duration-200 hover:underline"
               >
                 Sign Up
               </Link>
@@ -75,7 +75,7 @@ const Login = () => {
                 <div>
                   <label
                     htmlFor="email"
-                    className="text-base font-medium text-gray-900"
+                    className="text-base font-medium text-gray-900 dark:text-white/80"
                   >
                     Email address
                   </label>
@@ -93,7 +93,7 @@ const Login = () => {
                   <div className="flex items-center justify-between">
                     <label
                       htmlFor="password"
-                      className="text-base font-medium text-gray-900"
+                      className="text-base font-medium text-gray-900 dark:text-white/80"
                     >
                       Password
                     </label>
