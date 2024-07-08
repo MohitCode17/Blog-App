@@ -8,7 +8,7 @@ const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
 
   return (
-    <Navbar className="border-b dark:bg-[#191919]">
+    <Navbar className="border-b dark:bg-[#111827]">
       <Link to={"/"} className="flex items-center gap-1">
         <img src="./logo.svg" alt="logo" />
         <span className="sm:flex hidden font-bold text-xl text-[#312ecb]">
@@ -19,7 +19,7 @@ const Header = () => {
       <form>
         <div className="flex grow justify-end">
           <input
-            className="hidden lg:flex h-10 w-[250px] rounded-md bg-gray-100 px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none dark:bg-[#292929] dark:text-white"
+            className="hidden lg:flex h-10 w-[250px] rounded-md bg-gray-100 px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none dark:bg-[#111827] dark:text-white"
             type="text"
             placeholder="Serach"
           ></input>
@@ -33,7 +33,7 @@ const Header = () => {
       <div className="flex gap-2 md:order-2">
         {currentUser ? (
           <Dropdown
-            className="dark:bg-[#292929]"
+            className="dark:bg-[#1d273b]"
             arrowIcon={false}
             inline
             label={
