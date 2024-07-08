@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middlewares/error.js";
 import cors from "cors";
+import fileUpload from "express-fileupload";
 import { config } from "dotenv";
 config();
 
@@ -20,6 +21,14 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// FILE UPLOAD MIDDLEWARE
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
 
 // TEST API ENDPOINT
 app.get("/test", (req, res) => {

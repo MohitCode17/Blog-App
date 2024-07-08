@@ -3,6 +3,7 @@ import ErrorHandler from "../middlewares/error.js";
 import User from "../models/user.model.js";
 import { generateAuthToken } from "../utils/authToken.js";
 import bcrypt from "bcryptjs";
+import cloudinary from "../config/cloudinary.js";
 
 // REGISTER CONTROLLER
 export const handleRegister = catchAsyncErrors(async (req, res, next) => {
@@ -88,6 +89,68 @@ export const handleGoogleAuth = catchAsyncErrors(async (req, res, next) => {
 });
 
 // UPDATE PROFILE CONTROLLER
-export const handleProfileUpdate = catchAsyncErrors(
-  async (req, res, next) => {}
-);
+export const handleProfileUpdate = catchAsyncErrors(async (req, res, next) => {
+  const updatedData = {
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password,
+  };
+
+  if (req.user.id !== req.params.userId)
+    return next(
+      new ErrorHandler("You are not allowed to update this user", 403)
+    );
+
+  if (updatedData.password) {
+    if (updatedData.password.length < 8)
+      return next(
+        new ErrorHandler("Password must be atleast 8 or more characters")
+      );
+    updatedData.password = await bcrypt.hash(updatedData.password, 10);
+  }
+
+  if (updatedData.username) {
+    if (updatedData.username.length < 5 || updatedData.username.length > 20) {
+      return next(
+        new ErrorHandler("Username must be between 5 and 20 characters", 400)
+      );
+    }
+    if (updatedData.username.includes(" ")) {
+      return next(new ErrorHandler("Username cannot contain spaces", 400));
+    }
+    if (updatedData.username !== updatedData.username.toLowerCase()) {
+      return next(new ErrorHandler("Username must be lowercase", 400));
+    }
+    if (!updatedData.username.match(/^[a-zA-Z0-9]+$/)) {
+      return next(
+        new ErrorHandler("Username can only contain letters and numbers", 400)
+      );
+    }
+  }
+
+  if (req.files && req.files.profilePicture) {
+    const profilePicture = req.files.profilePicture;
+
+    // UPLOAD AVATAR TO CLOUDINARY
+    const uploadProfilePictureResponse = await cloudinary.uploader.upload(
+      profilePicture.tempFilePath,
+      { folder: "Fintech User Avatar" }
+    );
+
+    updatedData.profilePicture = {
+      public_id: uploadProfilePictureResponse.public_id,
+      url: uploadProfilePictureResponse.url,
+    };
+  }
+
+  const user = await User.findByIdAndUpdate(req.params.userId, updatedData, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Profile Updated",
+    user,
+  });
+});
