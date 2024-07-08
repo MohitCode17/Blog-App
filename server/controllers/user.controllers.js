@@ -86,3 +86,8 @@ export const handleGoogleAuth = catchAsyncErrors(async (req, res, next) => {
     generateAuthToken(newUser, "Signup successfull", 201, res);
   }
 });
+
+// UPDATE PROFILE CONTROLLER
+export const handleProfileUpdate = catchAsyncErrors(
+  async (req, res, next) => {}
+);
