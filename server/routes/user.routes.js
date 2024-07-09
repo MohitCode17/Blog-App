@@ -39,6 +39,6 @@ router.delete("/delete/:userId", authenticate, handleDeleteProfile);
 // ROUTE: LOGOUT USER
 // PATH: /api/v1/user/signout
 // METHOD: POST
-router.post("/signout", handleSignout);
+router.post("/signout", authenticate, handleSignout);
 
 export default router;

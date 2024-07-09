@@ -112,6 +112,7 @@ const DashboardProfile = () => {
     try {
       const res = await fetch("http://localhost:8000/api/v1/user/signout", {
         method: "POST",
+        credentials: "include",
       });
       const data = await res.json();
 

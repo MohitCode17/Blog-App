@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema(
           "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
       },
     },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
@@ -47,9 +51,13 @@ userSchema.methods.comparePassword = async function (userPassword) {
 
 // GENERATE JWT TOKEN
 userSchema.methods.generateJsonWebToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: "7d",
-  });
+  return jwt.sign(
+    { id: this._id, isAdmin: this.isAdmin },
+    process.env.JWT_SECRET_KEY,
+    {
+      expiresIn: "7d",
+    }
+  );
 };
 
 const User = mongoose.model("User", userSchema);

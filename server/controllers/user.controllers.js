@@ -177,12 +177,7 @@ export const handleDeleteProfile = catchAsyncErrors(async (req, res, next) => {
 // USER SIGNOUT
 export const handleSignout = catchAsyncErrors(async (req, res, next) => {
   res
+    .clearCookie("access_token")
     .status(200)
-    .cookie("access_token", "", {
-      expires: new Date(Date.now()),
-    })
-    .json({
-      success: true,
-      message: "User has beed sign out!",
-    });
+    .json({ success: true, message: "User has been signed out" });
 });
