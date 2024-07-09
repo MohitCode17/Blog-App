@@ -173,3 +173,16 @@ export const handleDeleteProfile = catchAsyncErrors(async (req, res, next) => {
   await User.findByIdAndDelete(req.params.userId);
   res.status(200).json({ success: true, message: "User has been deleted" });
 });
+
+// USER SIGNOUT
+export const handleSignout = catchAsyncErrors(async (req, res, next) => {
+  res
+    .status(200)
+    .cookie("access_token", "", {
+      expires: new Date(Date.now()),
+    })
+    .json({
+      success: true,
+      message: "User has beed sign out!",
+    });
+});

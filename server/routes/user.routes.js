@@ -5,6 +5,7 @@ import {
   handleLogin,
   handleProfileUpdate,
   handleRegister,
+  handleSignout,
 } from "../controllers/user.controllers.js";
 import { authenticate } from "../middlewares/authenticate.js";
 
@@ -34,5 +35,10 @@ router.put("/update/:userId", authenticate, handleProfileUpdate);
 // PATH: /api/v1/user/delete/:userId
 // METHOD: DELETE
 router.delete("/delete/:userId", authenticate, handleDeleteProfile);
+
+// ROUTE: LOGOUT USER
+// PATH: /api/v1/user/signout
+// METHOD: POST
+router.post("/signout", handleSignout);
 
 export default router;
