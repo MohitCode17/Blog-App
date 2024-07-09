@@ -80,7 +80,7 @@ export const handleGoogleAuth = catchAsyncErrors(async (req, res, next) => {
         Math.random().toString(9).slice(-4),
       email,
       password: hashedPassword,
-      profilePicture: googlePhotoUrl,
+      profilePicture: { url: googlePhotoUrl },
     });
 
     await newUser.save();
@@ -153,4 +153,23 @@ export const handleProfileUpdate = catchAsyncErrors(async (req, res, next) => {
     message: "Profile Updated",
     user,
   });
+});
+
+// HANDLE DELETE PROFILE
+export const handleDeleteProfile = catchAsyncErrors(async (req, res, next) => {
+  if (req.user.id !== req.params.userId)
+    return next(
+      new ErrorHandler("You are not allowed to delete this user", 403)
+    );
+
+  const user = await User.findById(req.params.userId);
+  // PUBLIC ID OF PROFILE PICTURE
+  if (user.profilePicture.public_id) {
+    const profilePicturePublicId = user.profilePicture?.public_id;
+    await cloudinary.uploader.destroy(profilePicturePublicId);
+  }
+
+  // DELETE USER
+  await User.findByIdAndDelete(req.params.userId);
+  res.status(200).json({ success: true, message: "User has been deleted" });
 });

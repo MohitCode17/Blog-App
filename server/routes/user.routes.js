@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  handleDeleteProfile,
   handleGoogleAuth,
   handleLogin,
   handleProfileUpdate,
@@ -28,5 +29,10 @@ router.post("/googleAuth", handleGoogleAuth);
 // PATH: /api/v1/user/update/:userId
 // METHOD: PUT
 router.put("/update/:userId", authenticate, handleProfileUpdate);
+
+// ROUTE: DELETE PROFILE
+// PATH: /api/v1/user/delete/:userId
+// METHOD: DELETE
+router.delete("/delete/:userId", authenticate, handleDeleteProfile);
 
 export default router;
