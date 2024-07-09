@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Modal } from "flowbite-react";
+import { Button, Modal, Spinner } from "flowbite-react";
 import { useState } from "react";
 ``;
 import {
@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const DashboardProfile = () => {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const [username, setUsername] = useState(currentUser && currentUser.username);
@@ -144,7 +144,14 @@ const DashboardProfile = () => {
         ></input>
 
         <Button type="submit" gradientDuoTone="purpleToBlue" outline>
-          Update
+          {loading ? (
+            <>
+              <Spinner size="sm" />
+              <span className="pl-3">Loading...</span>
+            </>
+          ) : (
+            "Update"
+          )}
         </Button>
       </form>
       <div className="text-red-500 flex justify-between mt-5">
