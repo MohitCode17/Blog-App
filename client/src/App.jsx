@@ -12,6 +12,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ToggleThemeButton from "./components/ToggleThemeButton";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CreatePost from "./pages/CreatePost";
+import PrivateRouteForAdmin from "./components/PrivateRouteForAdmin";
 
 const App = () => {
   return (
@@ -25,6 +27,9 @@ const App = () => {
         <Route path="/projects" element={<Projects />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+        <Route element={<PrivateRouteForAdmin />}>
+          <Route path="/write-post" element={<CreatePost />} />
         </Route>
       </Routes>
       <div className="fixed bottom-5 right-5">

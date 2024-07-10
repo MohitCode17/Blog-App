@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Spinner } from "flowbite-react";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 ``;
 import {
@@ -165,16 +166,26 @@ const DashboardProfile = () => {
           onChange={(e) => setPassword(e.target.value)}
         ></input>
 
-        <Button type="submit" gradientDuoTone="purpleToBlue" outline>
-          {loading ? (
-            <>
-              <Spinner size="sm" />
-              <span className="pl-3">Loading...</span>
-            </>
-          ) : (
-            "Update"
-          )}
+        <Button
+          disabled={loading}
+          type="submit"
+          gradientDuoTone="purpleToBlue"
+          outline
+        >
+          {loading ? "Loading..." : "Update"}
         </Button>
+
+        {currentUser.isAdmin && (
+          <Link to={"/write-post"}>
+            <Button
+              type="button"
+              gradientDuoTone="purpleToBlue"
+              className="w-full"
+            >
+              Write a post
+            </Button>
+          </Link>
+        )}
       </form>
       <div className="text-red-500 flex justify-between mt-5">
         <span className="cursor-pointer" onClick={() => setShowModal(true)}>
