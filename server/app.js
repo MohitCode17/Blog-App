@@ -37,9 +37,11 @@ app.get("/test", (req, res) => {
 
 // IMPORT ROUTES
 import userRoutes from "./routes/user.routes.js";
+import postRoutes from "./routes/post.routes.js";
 
 // ROUTE DECLARATION
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/post", postRoutes);
 
 // ERROR HANDLER MIDDLEWARE
 app.use(errorMiddleware);
