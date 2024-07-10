@@ -1,13 +1,67 @@
 import { TextInput, Select, FileInput, Button } from "flowbite-react";
+import { useState } from "react";
 import { IoMdPhotos } from "react-icons/io";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CreatePost = () => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [category, setCategory] = useState("");
+  const [postImage, setPostImage] = useState("");
+  const [postImagePreview, setPostImagePreview] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigateTo = useNavigate();
+
+  // HANDLING PROFILE PICTURE
+  const handlePostImage = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader(file);
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setPostImagePreview(reader.result);
+      setPostImage(file);
+    };
+  };
+
+  // HANDLE CREATE POST
+  const handleCreatePost = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", content);
+    formData.append("category", category);
+    formData.append("postImage", postImage);
+
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:8000/api/v1/post/write", {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (!data.success) {
+        toast.error(data.message);
+        setLoading(false);
+        return;
+      }
+      navigateTo(`/post/${data.newPost.slug}`);
+    } catch (error) {
+      toast.error(error.message);
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4" onSubmit={handleCreatePost}>
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
           <TextInput
             type="text"
@@ -15,35 +69,37 @@ const CreatePost = () => {
             required
             id="title"
             className="flex-1"
+            onChange={(e) => setTitle(e.target.value)}
           />
-          <Select>
+          <Select onChange={(e) => setCategory(e.target.value)}>
             <option value="uncategorized">Select a category</option>
             <option value="javascript">JavaScript</option>
             <option value="reactjs">React.js</option>
             <option value="nextjs">Next.js</option>
           </Select>
         </div>
-        <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
-          <div className="flex items-center justify-center h-16 w-28 border-2 border-dotted border-teal-500 p-1">
-            <IoMdPhotos size={30} />
-
-            {/* <img
-              src="https://i0.wp.com/www.projectsmind.com/wp-content/uploads/2021/05/What-is-project.png"
+        <FileInput type="file" accept="image/*" onChange={handlePostImage} />
+        {postImagePreview && (
+          <div className="w-full h-[350px]">
+            <img
+              src={postImagePreview && postImagePreview}
               alt=""
-              className="object-cover h-full w-full"
-            /> */}
+              className="w-full h-full object-cover"
+            />
           </div>
-
-          <FileInput type="file" accept="image/*" />
-        </div>
+        )}
         <ReactQuill
           theme="snow"
           placeholder="Write something..."
           className="h-72 mb-12"
           required
+          onChange={(value) => {
+            setContent(value);
+          }}
+          value={content}
         />
         <Button type="submit" gradientDuoTone="purpleToBlue">
-          Publish
+          {loading ? "Publishing..." : "Publish"}
         </Button>
       </form>
     </div>
