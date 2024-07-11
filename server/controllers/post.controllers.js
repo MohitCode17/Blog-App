@@ -103,3 +103,22 @@ export const handleGetPosts = catchAsyncErrors(async (req, res, next) => {
     lastMonthPosts,
   });
 });
+
+// DELETE POST
+export const handleDeletePost = catchAsyncErrors(async (req, res, next) => {
+  if (!req.user.isAdmin || req.user.id !== req.params.userId)
+    return next(
+      new ErrorHandler("You are not allowed to delete this post", 403)
+    );
+
+  const post = await Post.findById(req.params.postId);
+
+  const postImagePublicId = post.postImage?.public_id;
+  await cloudinary.uploader.destroy(postImagePublicId);
+
+  await Post.findByIdAndDelete(req.params.postId);
+  res.status(200).json({
+    success: true,
+    message: "Post has been deleted",
+  });
+});

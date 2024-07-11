@@ -1,6 +1,7 @@
 import express from "express";
 import { authenticate } from "../middlewares/authenticate.js";
 import {
+  handleDeletePost,
   handleGetPosts,
   handleWriteBlog,
 } from "../controllers/post.controllers.js";
@@ -16,5 +17,10 @@ router.post("/write", authenticate, handleWriteBlog);
 // PATH: /api/v1/post/getposts
 // METHOD: GET
 router.get("/getposts", handleGetPosts);
+
+// ROUTE: DELETE
+// PATH: /api/v1/post/delete/:postId/:userId
+// METHOD: GET
+router.delete("/delete/:postId/:userId", authenticate, handleDeletePost);
 
 export default router;
