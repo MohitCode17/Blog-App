@@ -157,7 +157,7 @@ export const handleProfileUpdate = catchAsyncErrors(async (req, res, next) => {
 
 // HANDLE DELETE PROFILE
 export const handleDeleteProfile = catchAsyncErrors(async (req, res, next) => {
-  if (req.user.id !== req.params.userId)
+  if (!req.user.isAdmin && req.user.id !== req.params.userId)
     return next(
       new ErrorHandler("You are not allowed to delete this user", 403)
     );

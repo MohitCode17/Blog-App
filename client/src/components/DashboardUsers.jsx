@@ -10,6 +10,7 @@ const DashboardUsers = () => {
   const [users, setUsers] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -57,6 +58,29 @@ const DashboardUsers = () => {
     }
   };
 
+  // HANDLE DELETE USER
+  const handleUserDelete = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:8000/api/v1/user/delete/${userIdToDelete}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      const data = await res.json();
+      if (data.success === true) {
+        setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
+        setShowModal(false);
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="w-full table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {currentUser.isAdmin && users.length > 0 ? (
@@ -96,6 +120,7 @@ const DashboardUsers = () => {
                     <span
                       onClick={() => {
                         setShowModal(true);
+                        setUserIdToDelete(user._id);
                       }}
                       className="font-medium text-red-500 hover:underline cursor-pointer"
                     >
@@ -134,7 +159,9 @@ const DashboardUsers = () => {
               Are you sure you want to delete this user?
             </h3>
             <div className="flex justify-center gap-4">
-              <Button color="failure">Yes, I'm sure</Button>
+              <Button color="failure" onClick={handleUserDelete}>
+                Yes, I'm sure
+              </Button>
               <Button color="gray" onClick={() => setShowModal(false)}>
                 No, cancel
               </Button>
