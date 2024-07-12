@@ -14,6 +14,7 @@ import ToggleThemeButton from "./components/ToggleThemeButton";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreatePost from "./pages/CreatePost";
 import PrivateRouteForAdmin from "./components/PrivateRouteForAdmin";
+import UpdatePost from "./pages/UpdatePost";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
         </Route>
         <Route element={<PrivateRouteForAdmin />}>
           <Route path="/write-post" element={<CreatePost />} />
+          <Route path="/update-post/:postId" element={<UpdatePost />} />
         </Route>
       </Routes>
       <div className="fixed bottom-5 right-5">

@@ -56,6 +56,7 @@ const DashboardPosts = () => {
 
   // HANDLE DELETE POST
   const handleDeletePost = async () => {
+    setShowModal(false);
     try {
       const res = await fetch(
         `http://localhost:8000/api/v1/post/delete/${postIdToDelete}/${currentUser._id}`,

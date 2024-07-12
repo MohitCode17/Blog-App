@@ -122,3 +122,48 @@ export const handleDeletePost = catchAsyncErrors(async (req, res, next) => {
     message: "Post has been deleted",
   });
 });
+
+// UPDATE POST
+export const handleUpdatePost = catchAsyncErrors(async (req, res, next) => {
+  if (!req.user.isAdmin || req.user.id !== req.params.userId)
+    return next(
+      new ErrorHandler("You are not allowed to delete this post", 403)
+    );
+
+  const updatedData = {
+    title: req.body.title,
+    content: req.body.content,
+    category: req.body.category,
+  };
+
+  if (req.files && req.files.postImage) {
+    const postImage = req.files.postImage;
+    const post = await Post.findById(req.params.postId);
+
+    // GET EXISTING IMAGE PUBLIC ID AND DELETE FROM CLOUDINARY
+    const postImagePublicId = post.postImage.public_id;
+    await cloudinary.uploader.destroy(postImagePublicId);
+
+    // UPLOAD NEW POST IMAGE TO CLOUDINARY
+    const uploadResponseForPostImage = await cloudinary.uploader.upload(
+      postImage.tempFilePath,
+      { folder: "FinTech Post Banner" }
+    );
+
+    updatedData.postImage = {
+      public_id: uploadResponseForPostImage.public_id,
+      url: uploadResponseForPostImage.url,
+    };
+  }
+
+  const post = await Post.findByIdAndUpdate(req.params.postId, updatedData, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Post Updated!",
+    post,
+  });
+});

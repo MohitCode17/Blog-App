@@ -3,6 +3,7 @@ import { authenticate } from "../middlewares/authenticate.js";
 import {
   handleDeletePost,
   handleGetPosts,
+  handleUpdatePost,
   handleWriteBlog,
 } from "../controllers/post.controllers.js";
 
@@ -22,5 +23,10 @@ router.get("/getposts", handleGetPosts);
 // PATH: /api/v1/post/delete/:postId/:userId
 // METHOD: GET
 router.delete("/delete/:postId/:userId", authenticate, handleDeletePost);
+
+// ROUTE: UPDATE POST
+// PATH: /api/v1/post/update/:postId/:userId
+// METHOD: PUT
+router.put("/update/:postId/:userId", authenticate, handleUpdatePost);
 
 export default router;
