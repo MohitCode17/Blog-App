@@ -125,6 +125,18 @@ const UpdatePost = () => {
         )}
         <ReactQuill
           theme="snow"
+          modules={{
+            toolbar: [
+              [{ header: "1" }, { header: "2" }, { font: [] }],
+              [{ list: "ordered" }, { list: "bullet" }],
+              ["bold", "italic", "underline", "strike", "blockquote"],
+              [{ align: [] }],
+              [{ color: [] }, { background: [] }],
+              ["link", "image", "video"],
+              ["code-block"],
+              ["clean"],
+            ],
+          }}
           placeholder="Write something..."
           className="h-72 mb-12"
           required
