@@ -27,8 +27,16 @@
   background-color: #1e293b;
   border: 1px solid rgb(82, 82, 82);
   color: rgb(227, 227, 227);
-  border-radius: 0.2rem;
+  border-radius: 0.3rem;
   padding: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.post-content p code {
+  background-color: #1e293b !important;
+  color: white;
+  padding: 0 0.2rem;
 }
 
 .post-content a {
@@ -43,4 +51,3 @@
 .dark .post-content a {
   color: red;
 }
-
