@@ -8,8 +8,31 @@ const CommentSection = ({ postId }) => {
   const [commentError, setCommentError] = useState(null);
   const [comment, setComment] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+      const res = await fetch("http://localhost:8000/api/v1/comment/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: comment,
+          userId: currentUser._id,
+          postId,
+        }),
+        credentials: "include",
+      });
+
+      const data = await res.json();
+      if (data.success === true) {
+        setComment("");
+        setCommentError(null);
+      }
+    } catch (error) {
+      setCommentError(error.message);
+    }
   };
 
   return (
@@ -41,9 +64,7 @@ const CommentSection = ({ postId }) => {
         </div>
       )}
       {currentUser && (
-        <form
-          onSubmit={handleSubmit}
-        >
+        <form onSubmit={handleSubmit}>
           <Textarea
             placeholder="Add a comment..."
             rows="3"
