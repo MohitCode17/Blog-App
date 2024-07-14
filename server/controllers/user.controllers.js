@@ -218,3 +218,14 @@ export const handleGetUsers = catchAsyncErrors(async (req, res, next) => {
     lastMonthUsers,
   });
 });
+
+export const handleGetUser = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.params.userId);
+
+  if (!user) return next(new ErrorHandler("User not found", 404));
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});

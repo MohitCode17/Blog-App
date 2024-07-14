@@ -19,3 +19,14 @@ export const handleCreateComment = catchAsyncErrors(async (req, res, next) => {
     newComment,
   });
 });
+
+// GET POST COMMENT
+export const handleGetPostComment = catchAsyncErrors(async (req, res, next) => {
+  const comments = await Comment.find({ postId: req.params.postId }).sort({
+    createdAt: -1,
+  });
+  res.status(200).json({
+    success: true,
+    comments,
+  });
+});

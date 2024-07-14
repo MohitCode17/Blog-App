@@ -1,6 +1,7 @@
 import express from "express";
 import {
   handleDeleteProfile,
+  handleGetUser,
   handleGetUsers,
   handleGoogleAuth,
   handleLogin,
@@ -46,5 +47,10 @@ router.get("/getUsers", authenticate, handleGetUsers);
 // PATH: /api/v1/user/signout
 // METHOD: POST
 router.post("/signout", authenticate, handleSignout);
+
+// ROUTE: GET USERS
+// PATH: /api/v1/user/:userId
+// METHOD: GET
+router.get("/:userId", handleGetUser);
 
 export default router;
