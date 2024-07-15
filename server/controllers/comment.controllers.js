@@ -30,3 +30,27 @@ export const handleGetPostComment = catchAsyncErrors(async (req, res, next) => {
     comments,
   });
 });
+
+// LIKE A COMMENT
+export const handleLikeComment = catchAsyncErrors(async (req, res, next) => {
+  const comment = await Comment.findById(req.params.commentId);
+
+  if (!comment) return next(new ErrorHandler("Comment not found", 404));
+
+  // Check if comment is already liked or not
+  const userIndex = comment.likes.indexOf(req.user.id);
+
+  if (userIndex === -1) {
+    comment.numberOfLikes += 1;
+    comment.likes.push(req.user.id);
+  } else {
+    comment.numberOfLikes -= 1;
+    comment.likes.splice(userIndex, 1);
+  }
+
+  await comment.save();
+  res.status(200).json({
+    success: true,
+    comment,
+  });
+});

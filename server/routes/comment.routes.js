@@ -3,6 +3,7 @@ import { authenticate } from "../middlewares/authenticate.js";
 import {
   handleCreateComment,
   handleGetPostComment,
+  handleLikeComment,
 } from "../controllers/comment.controllers.js";
 const router = express.Router();
 
@@ -15,5 +16,10 @@ router.post("/create", authenticate, handleCreateComment);
 // PATH: /api/v1/comment/getPostComment/:postId
 // METHOD: GET
 router.get("/getPostComment/:postId", handleGetPostComment);
+
+// ROUTE: ADD LIKES
+// PATH: /api/v1/comment/likeComment/:commentId
+// METHOD: PUT
+router.put("/likeComment/:commentId", authenticate, handleLikeComment);
 
 export default router;
