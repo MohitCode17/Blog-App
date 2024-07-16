@@ -2,6 +2,7 @@ import express from "express";
 import { authenticate } from "../middlewares/authenticate.js";
 import {
   handleCreateComment,
+  handleEditComment,
   handleGetPostComment,
   handleLikeComment,
 } from "../controllers/comment.controllers.js";
@@ -17,9 +18,14 @@ router.post("/create", authenticate, handleCreateComment);
 // METHOD: GET
 router.get("/getPostComment/:postId", handleGetPostComment);
 
-// ROUTE: ADD LIKES
+// ROUTE: ADD LIKES COMMENTS
 // PATH: /api/v1/comment/likeComment/:commentId
 // METHOD: PUT
 router.put("/likeComment/:commentId", authenticate, handleLikeComment);
+
+// ROUTE: EDIT COMMENTS
+// PATH: /api/v1/comment/editComment/:commentId
+// METHOD: PUT
+router.put("/editComment/:commentId", authenticate, handleEditComment);
 
 export default router;

@@ -54,3 +54,19 @@ export const handleLikeComment = catchAsyncErrors(async (req, res, next) => {
     comment,
   });
 });
+
+// EDIT COMMENT
+export const handleEditComment = catchAsyncErrors(async (req, res, next) => {
+  const comment = await Comment.findById(req.params.commentId);
+  if (!comment) return next(new ErrorHandler("Comment not found", 404));
+
+  if (comment.userId !== req.user.id || !req.user.isAdmin)
+    return next(new Error("You are not allowed to edit this comment", 403));
+
+  const editComment = await Comment.findByIdAndUpdate(
+    req.params.commentId,
+    { content: req.body.content },
+    { new: true }
+  );
+  res.status(200).json({ success: true, editComment });
+});
