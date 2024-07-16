@@ -2,6 +2,7 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/error.js";
 import cloudinary from "../config/cloudinary.js";
 import Post from "../models/post.model.js";
+import User from "../models/user.model.js";
 
 // CREATE POST
 export const handleWriteBlog = catchAsyncErrors(async (req, res, next) => {
@@ -96,9 +97,14 @@ export const handleGetPosts = catchAsyncErrors(async (req, res, next) => {
     createdAt: { $gte: oneMonthAgo },
   });
 
+  const user = await User.findById(req.query.userId);
+
+  if (!user) return next(new ErrorHandler("No user found", 404));
+
   res.status(200).json({
     success: true,
     posts,
+    user,
     totalPosts,
     lastMonthPosts,
   });

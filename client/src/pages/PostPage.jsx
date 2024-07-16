@@ -2,19 +2,24 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Spinner } from "flowbite-react";
 import CommentSection from "../components/CommentSection";
+import { useSelector } from "react-redux";
+import PostCard from "../components/PostCard";
 
 const PostPage = () => {
   const { slug } = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
+  const [recentPost, setRecentPost] = useState([]);
+  const [author, setAuthor] = useState(null);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
         setLoading(true);
         const res = await fetch(
-          `http://localhost:8000/api/v1/post/getposts?slug=${slug}`
+          `http://localhost:8000/api/v1/post/getposts?slug=${slug}&userId=${currentUser._id}`
         );
         const data = await res.json();
 
@@ -36,6 +41,29 @@ const PostPage = () => {
     };
     fetchPost();
   }, [slug]);
+
+  // FETCH RECENT POST
+  useEffect(() => {
+    const fetchRecentPosts = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:8000/api/v1/post/getposts?limit=${3}&userId=${
+            currentUser._id
+          }`
+        );
+
+        const data = await res.json();
+
+        if (data.success === true) {
+          setRecentPost(data.posts);
+          setAuthor(data.user);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchRecentPosts();
+  }, []);
 
   if (loading)
     return (
@@ -73,7 +101,19 @@ const PostPage = () => {
         dangerouslySetInnerHTML={{ __html: post && post.content }}
       ></div>
 
+      {/* Comment Section */}
       <CommentSection postId={post && post._id} />
+
+      {/* Recent Post Section */}
+      <div className="mx-auto max-w-7xl px-2">
+        {/* posts */}
+        <h1 className="text-xl mt-5 text-center font-semibold">Recent articles</h1>
+        <div className="grid gap-6 gap-y-10 py-6 md:grid-cols-2 lg:grid-cols-3">
+          {recentPost.map((post) => (
+            <PostCard post={post} author={author} />
+          ))}
+        </div>
+      </div>
     </main>
   );
 };
