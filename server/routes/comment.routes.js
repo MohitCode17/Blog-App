@@ -2,6 +2,7 @@ import express from "express";
 import { authenticate } from "../middlewares/authenticate.js";
 import {
   handleCreateComment,
+  handleDeleteComment,
   handleEditComment,
   handleGetPostComment,
   handleLikeComment,
@@ -27,5 +28,11 @@ router.put("/likeComment/:commentId", authenticate, handleLikeComment);
 // PATH: /api/v1/comment/editComment/:commentId
 // METHOD: PUT
 router.put("/editComment/:commentId", authenticate, handleEditComment);
+
+// ROUTE: DELETE COMMENT
+// PATH: /api/v1/comment/deleteComment/:commentId
+// METHOD: DELETE
+router.delete("/deleteComment/:commentId", authenticate, handleDeleteComment);
+
 
 export default router;

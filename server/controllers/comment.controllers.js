@@ -60,7 +60,7 @@ export const handleEditComment = catchAsyncErrors(async (req, res, next) => {
   const comment = await Comment.findById(req.params.commentId);
   if (!comment) return next(new ErrorHandler("Comment not found", 404));
 
-  if (comment.userId !== req.user.id || !req.user.isAdmin)
+  if (comment.userId !== req.user.id && !req.user.isAdmin)
     return next(new Error("You are not allowed to edit this comment", 403));
 
   const editComment = await Comment.findByIdAndUpdate(
@@ -69,4 +69,16 @@ export const handleEditComment = catchAsyncErrors(async (req, res, next) => {
     { new: true }
   );
   res.status(200).json({ success: true, editComment });
+});
+
+// DELETE COMMENT
+export const handleDeleteComment = catchAsyncErrors(async (req, res, next) => {
+  const comment = await Comment.findById(req.params.commentId);
+  if (!comment) return next(new ErrorHandler("Comment not found", 404));
+
+  if (comment.userId !== req.user.id && !req.user.isAdmin)
+    return next(new Error("You are not allowed to delete this comment", 403));
+
+  await Comment.findByIdAndDelete(req.params.commentId);
+  res.status(200).json({ success: true, message: "Comment has been deleted." });
 });
