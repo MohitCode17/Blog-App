@@ -4,6 +4,7 @@ import {
   handleCreateComment,
   handleDeleteComment,
   handleEditComment,
+  handleGetComments,
   handleGetPostComment,
   handleLikeComment,
 } from "../controllers/comment.controllers.js";
@@ -34,5 +35,9 @@ router.put("/editComment/:commentId", authenticate, handleEditComment);
 // METHOD: DELETE
 router.delete("/deleteComment/:commentId", authenticate, handleDeleteComment);
 
+// ROUTE: GET COMMENT
+// PATH: /api/v1/comment/getComments
+// METHOD: DELETE
+router.get("/getComments", authenticate, handleGetComments);
 
 export default router;

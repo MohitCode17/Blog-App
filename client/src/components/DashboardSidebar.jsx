@@ -6,6 +6,7 @@ import {
   HiArrowSmRight,
   HiDocumentText,
   HiOutlineUserGroup,
+  HiAnnotation,
 } from "react-icons/hi";
 import { useSelector } from "react-redux";
 
@@ -38,27 +39,37 @@ const DashboardSidebar = () => {
             </Sidebar.Item>
           </Link>
           {currentUser.isAdmin && (
-            <Link to={"/dashboard?tab=posts"}>
-              <Sidebar.Item
-                active={tab === "posts"}
-                icon={HiDocumentText}
-                labelColor="dark"
-              >
-                Posts
-              </Sidebar.Item>
-            </Link>
-          )}
+            <>
+              <Link to={"/dashboard?tab=posts"}>
+                <Sidebar.Item
+                  active={tab === "posts"}
+                  icon={HiDocumentText}
+                  labelColor="dark"
+                >
+                  Posts
+                </Sidebar.Item>
+              </Link>
 
-          {currentUser.isAdmin && (
-            <Link to={"/dashboard?tab=users"}>
-              <Sidebar.Item
-                active={tab === "users"}
-                icon={HiOutlineUserGroup}
-                labelColor="dark"
-              >
-                Users
-              </Sidebar.Item>
-            </Link>
+              <Link to={"/dashboard?tab=users"}>
+                <Sidebar.Item
+                  active={tab === "users"}
+                  icon={HiOutlineUserGroup}
+                  labelColor="dark"
+                >
+                  Users
+                </Sidebar.Item>
+              </Link>
+
+              <Link to={"/dashboard?tab=comments"}>
+                <Sidebar.Item
+                  active={tab === "users"}
+                  icon={HiAnnotation}
+                  labelColor="dark"
+                >
+                  Comments
+                </Sidebar.Item>
+              </Link>
+            </>
           )}
           <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer">
             Sign Out
