@@ -97,9 +97,12 @@ export const handleGetPosts = catchAsyncErrors(async (req, res, next) => {
     createdAt: { $gte: oneMonthAgo },
   });
 
-  const user = await User.findById(req.query.userId);
-
-  if (!user) return next(new ErrorHandler("No user found", 404));
+  let user = null;
+  
+  if (req.query.userId) {
+    user = await User.findById(req.query.userId);
+    if (!user) return next(new ErrorHandler("No user found", 404));
+  }
 
   res.status(200).json({
     success: true,

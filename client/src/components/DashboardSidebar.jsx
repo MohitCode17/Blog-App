@@ -7,6 +7,7 @@ import {
   HiDocumentText,
   HiOutlineUserGroup,
   HiAnnotation,
+  HiChartPie,
 } from "react-icons/hi";
 import { useSelector } from "react-redux";
 
@@ -40,6 +41,16 @@ const DashboardSidebar = () => {
           </Link>
           {currentUser.isAdmin && (
             <>
+              <Link to={"/dashboard?tab=dashboard-overview"}>
+                <Sidebar.Item
+                  active={tab === "posts"}
+                  icon={HiChartPie}
+                  labelColor="dark"
+                >
+                  Dashboard
+                </Sidebar.Item>
+              </Link>
+
               <Link to={"/dashboard?tab=posts"}>
                 <Sidebar.Item
                   active={tab === "posts"}
