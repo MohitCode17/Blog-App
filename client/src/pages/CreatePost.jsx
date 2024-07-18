@@ -76,6 +76,13 @@ const CreatePost = () => {
             <option value="javascript">JavaScript</option>
             <option value="reactjs">React.js</option>
             <option value="nextjs">Next.js</option>
+            <option value="programming">Programming</option>
+            <option value="web development">Web Development</option>
+            <option value="stock market">Stock Market</option>
+            <option value="finance">Finance</option>
+            <option value="cybersecurity">Cybersecurity</option>
+            <option value="maching leaning">Maching Learning</option>
+            <option value="data science">Data Science</option>
           </Select>
         </div>
         <FileInput type="file" accept="image/*" onChange={handlePostImage} />
