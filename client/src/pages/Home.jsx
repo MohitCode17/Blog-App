@@ -2,7 +2,6 @@ import { Button } from "flowbite-react";
 import { useEffect, useState } from "react";
 import PostCard from "../components/PostCard";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -56,7 +55,9 @@ const Home = () => {
         <div className="grid gap-6 gap-y-10 py-6 md:grid-cols-2 lg:grid-cols-3">
           {posts &&
             posts.length > 0 &&
-            posts.map((post) => <PostCard post={post} author={user} />)}
+            posts.map((post) => (
+              <PostCard key={post._id} post={post} author={user} />
+            ))}
         </div>
       </div>
     </div>

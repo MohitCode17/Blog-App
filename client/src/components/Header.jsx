@@ -1,33 +1,54 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const { pathname } = useLocation();
   const { currentUser } = useSelector((state) => state.user);
+  const navigateTo = useNavigate();
+  const location = useLocation();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // GET SEARCH TERM FROM URL LOGIC
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
+
+  // HANDLE SUBMIT
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("searchTerm", searchTerm);
+
+    const searchQuery = urlParams.toString();
+    navigateTo(`/search?${searchQuery}`);
+  };
 
   return (
     <Navbar className="border-b dark:bg-[#111827]">
-      <Link to={"/"} className="flex items-center gap-1">
-        <img src="./logo.svg" alt="logo" />
-        <span className="sm:flex hidden font-bold text-xl text-[#312ecb]">
+      <Link to={"/"} className="items-center gap-1">
+        <img src="./logo.svg" alt="logo" className="flex sm:hidden" />
+        <span className="hidden sm:flex font-bold text-xl text-[#312ecb]">
           Fin<span className="text-[#007aff]">Tech</span>
         </span>
       </Link>
 
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="flex grow justify-end">
           <input
-            className="hidden lg:flex h-10 w-[250px] rounded-md bg-gray-100 px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none dark:bg-[#111827] dark:text-white"
+            className="h-10 w-[150px] sm:w-[250px] rounded-md bg-gray-100 px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none dark:bg-[#111827] dark:text-white"
             type="text"
             placeholder="Serach"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           ></input>
         </div>
-
-        <Button className="w-12 h-10 lg:hidden" color="gray" pill>
-          <AiOutlineSearch size={18} />
-        </Button>
       </form>
 
       <div className="flex gap-2 md:order-2">
